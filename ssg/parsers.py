@@ -15,18 +15,18 @@ class Parser:
         with open(path,"r") as f:
             return f.read()
 
-    def write(path,dest,content,ext=".html")
+    def write(path,dest,content,ext=".html"):
         full_path= dest / path.with_suffix(ext).name
         with open(fullpath,"w") as file:
             file.write(content)
 
-    def copy(path, source, dest)
+    def copy(path, source, dest):
         shutil.copy2(path,dest / path.relative_to(source))
 
 class ResourceParser(Parser):
     extensions = [".jpg",".png",".gif",".css",".html"]
 
-    def parse(self,path,source,dest:)
+    def parse(self,path,source,dest):
         self.copy(path,source,dest)
 
     
