@@ -11,7 +11,7 @@ class Content(Mapping):
         load(fm,FullLoader)
         return cls(metadata,content)
     
-    def __init__(self,metadata,content)
+    def __init__(self,metadata,content):
         self.data=metadata
         self.data.add("content":content)
 
@@ -36,7 +36,7 @@ class Content(Mapping):
     def __len__(self):
         return self.data.length()
 
-    def __repr__(self)
+    def __repr__(self):
         data={}
         for item in self.data.items():
             if item.key is not "content":
