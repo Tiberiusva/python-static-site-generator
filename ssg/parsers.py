@@ -1,3 +1,7 @@
+import sys
+from docutils.core import publish_parts
+from markdown import markdown
+from ssg.content import Content
 from typing import List
 from pathlib import Path
 import shutil
@@ -29,4 +33,22 @@ class ResourceParser(Parser):
     def parse(self,path,source,dest):
         self.copy(path,source,dest)
 
+class MarkdownParser(Parser):
+    extensions:List[str]=[".md",".markdown"]
+
+    def parse(self,path:Path,source:Path,dest:Path):
+        content=Content.load(self.read(path))
+        html = markdown(content.body)
+        full_path= dest / path.with_suffix(ext).name
+        with open(full_path,"w") as file:
+            file.write(self.write(path,dest,html)) 
+
+        sys.stdout.write(r"\x1b[1;32m{} converted to HTML. Metadata: {}\n",format( path.name, content))
     
+class ReStructuredTextParser(Parser):
+    extensions:List[str]=[".rst"]
+    def parse(self,path:Path,source:Path,dest:Path):
+        content=Content.load(self.read(path))
+        html=publish_parts(content.body,writer_name="html5")
+        self.write(path,dest,html["html_body"])
+        sys.stdout.write(r"\x1b[1;32m{} converted to HTML. Metadata: {}\n"),format(path.name,content)
