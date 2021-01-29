@@ -1,35 +1,36 @@
 import re
 
 from collections.abc import Mapping
-from yaml import FullLoader,load
+from yaml import FullLoader, load
+
 
 class Content(Mapping):
-    __delimiter =  r"^(?:-|\+){3}\s*$"  
-    __regex = re.compile(__delimiter,re.MULTILINE)
+    __delimiter = r"^(?:-|\+){3}\s*$"
+    __regex = re.compile(__delimiter, re.MULTILINE)
 
     @classmethod
-    def load(cls,string):
-        _,fm,content=cls.__regex.split(string,2)
-        metadata=load(fm,Loader=FullLoader)
-        return cls(metadata,content)
-    
-    def __init__(self,metadata,content):
-        self.data=metadata
-        self.data["content"]=content
+    def load(cls, string):
+        _, fm, content = cls.__regex.split(string, 2)
+        metadata = load(fm, Loader=FullLoader)
+        return cls(metadata, content)
 
-    @property 
+    def __init__(self, metadata, content):
+        self.data = metadata
+        self.data["content"] = content
+
+    @property
     def body(self):
         return self.data["content"]
 
-    @property 
+    @property
     def type(self):
-        return self.data["type"] if "type" in self.data else None 
-    
+        return self.data["type"] if "type" in self.data else None
+
     @type.setter
     def type(self, type):
-        self.data["type"]=type
+        self.data["type"] = type
 
-    def __getitem__(self,key):
+    def __getitem__(self, key):
         return self.data[key]
 
     def __iter__(self):
@@ -39,8 +40,8 @@ class Content(Mapping):
         return len(self.data)
 
     def __repr__(self):
-        data={}
-        for key,value in self.data.items():
+        data = {}
+        for key, value in self.data.items():
             if key != "content":
-                data[key]=value
+                data[key] = value
         return str(data)
